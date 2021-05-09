@@ -1,10 +1,17 @@
+from classes.course import Course
+from util.time_utils import genTimetable
 import pandas as pd
 
-from flask import Flask, request, session, flash
+from flask import Flask, request, session
 
 from main import app
+from util.img_utils import *
+from util.sql_utils import *
 from util.utils import log
-from util.sql_utils import getAllCoursesDetaile, searchStudent
+from util.time_utils import timeList, extractCourseName
+
+from classes.student import Student
+from classes.detailed_course import DetailedCourse
 
 # Enter Student at HTML
 @app.route('/info', methods=['POST', 'GET'])
@@ -36,9 +43,89 @@ def info():
         </form>
     """.format("")
 
-    student = list(student[0])
+    s = Student(student[0])
+    t = s.getTimetable()
+    if ((t == None) or (t == "")):
+        r = initTimetable(s)
+        log(str(r))
+        # "Refresh" after initializing timetable
+        s = Student(searchStudent(sid)[0])
+
+    html += '<p>Hello <span style="color: #0000ff">{}</span>, welcome back. {}</p>'.format(s.getName(), imgMouseCB)
+    html += buildInfo(s)
+
+    html += "<br>" * 3
+    html += "<p>Your timetable here. {}</p>".format(imgPig)
+
+    timetable = s.getTimetable()
+    html += buildTimetable(timetable)
 
     return html
+
+
+def initTimetable(student):
+    
+    """
+        Don't have to consider about max credit etc
+        Since the credit will be 0
+    """
+
+    try:
+        timetable = genTimetable()
+
+        sCredit = student.getCredit()
+
+        dyc = student.getDeptYearClass()
+        complus = getCoursesDetailed(dyc)
+
+        for c in complus:
+            c = list(c)
+            log(str(c))
+            course = DetailedCourse(c)
+
+            if not (course.isCompuls()):
+                continue
+
+            # Remove this?
+            if (course.isFulled()):
+                continue
+            
+            credit = course.getCredit()
+
+            weekday = course.getWeekday()
+            session = course.getSession()
+
+            timetable[weekday][timeList[session]] = c
+            sCredit += credit
+
+            course.addStudent()
+        
+        student.updateCreditTimetable(sCredit, timetable)
+        return True
+
+    except Exception as e:
+
+        log(e)
+        return False
+
+def buildTimetable(timetable):
+    timetable = extractCourseName(timetable)
+
+    df = pd.DataFrame.from_dict(data = timetable)
+    df.fillna(" ").T
+    return df.to_html()
+
+def buildInfo(student):
+
+    s = student.getDataList()
+
+    # Removes the timetable
+    s.pop(-1)
+
+    col = ["學生ID", "姓名", "性別", "學系", "班級", "學分"]
+    df = pd.DataFrame([s], columns = col)
+    df.fillna(" ").T
+    return df.to_html(index=False)
 
 def getSID():
 
@@ -59,5 +146,3 @@ def getSID():
             return False, html
     
     return True, sid
-
-# def buildInfo(studentData):

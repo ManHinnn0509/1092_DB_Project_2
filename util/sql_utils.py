@@ -44,12 +44,17 @@ def searchStudent(sid):
     q = 'SELECT * FROM {} WHERE sid = "{}"'.format(studentTableName, sid)
     return execQuery(q)
 
-def getAllCoursesDetailed():
+def getCoursesDetailed(className = None):
     q = """
     SELECT c.cid, c.class, c.name, c.credit, c.is_compuls, c.dept, c.taken, c.max_taken, c.t_name, 
     ct.weekday, ct.session 
     FROM {0} AS c, {1} AS ct 
-    WHERE c.cid = ct.cid;
+    WHERE c.cid = ct.cid
     """.format(courseTableName, courseTimeTableName)
 
+    if (className == None):
+        q = q + ";"
+    else:
+        q = q + " " + 'AND c.class = "{}"'.format(className) + ";"
+    
     return execQuery(q)
