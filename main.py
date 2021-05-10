@@ -20,6 +20,7 @@ from util.img_utils import lmPointL, lmPointR
 from info_page import info
 from courses_page import courses
 from add_course_page import add_course
+from drop_course_page import drop_course
 
 @app.route('/')
 def index():

@@ -30,7 +30,7 @@ def courses():
     </form>
 
     <form method="post" action="/drop_course">
-        {1} 退選課程 (請輸入選課代號)：<input name="cid_drop_input">
+        {1} 退選課程 (請輸入選課代號)：<input name="cid_input">
         <input type="submit" value="送出">
     </form>
     """.format(lmPointR, lmPointR)

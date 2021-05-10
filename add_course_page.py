@@ -44,6 +44,11 @@ def add_course():
         html += "<p>You cannot add this course! (Reason: Maximum credit reached)</p>"
         return html
     
+    inCourse, l = student.hasCourse(cid)
+    if (inCourse):
+        html += "<p>You're in this course already!</p>"
+        return html
+    
     weekday = course.getWeekday()
     session = course.getSession()
     if (student.hasCourseSameTime(weekday, session)):

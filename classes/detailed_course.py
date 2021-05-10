@@ -7,6 +7,7 @@ from util.utils import log
 
 isCompulsIndex = 4
 courseNameIndex = 2
+cidIndex = 0
 
 class DetailedCourse:
     def __init__(self, courseData):
@@ -19,7 +20,7 @@ class DetailedCourse:
         return self.courseData[courseNameIndex]
     
     def getCID(self):
-        return self.courseData[0]
+        return self.courseData[cidIndex]
     
     def getCredit(self):
         return self.courseData[3]

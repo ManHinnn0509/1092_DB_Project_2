@@ -5,7 +5,7 @@ sys.path.append(".")
 from util.sql_utils import *
 from util.time_utils import timeList
 from core.config import maxCredit, minCredit
-from classes.detailed_course import courseNameIndex
+from classes.detailed_course import courseNameIndex, cidIndex
 
 class Student:
     def __init__(self, studentData):
@@ -44,14 +44,28 @@ class Student:
     def reachedMinCredit(self, credit):
         return (self.getCredit() - credit < minCredit)
     
-    def hasCourseSameTime(self, weekday, session):
-        timetable = self.getTimetable()
+    # I think I should rename this...?
+    def hasCourse(self, courseID):
 
-        try:
-            timetable = dict(timetable)
-        except:
-            timetable = eval(timetable)
+        # Lazy way ~
+        # return (str(courseID) in str(self.getTimetable()))
+
+        d = eval(self.getTimetable())
+
+        for weekday, t in d.items():
+            day = d[weekday]
+            times = list(day.keys())
+            for time in times:
+                course = day[time]
+                if (course == ""):
+                    continue
+                if (d[weekday][time][cidIndex] == courseID):
+                    return True, [weekday, time]
         
+        return False, None
+    
+    def hasCourseSameTime(self, weekday, session):
+        timetable = eval(self.getTimetable())
         return timetable[weekday][timeList[session]] != ""
     
     def hasSameCourse(self, courseName):

@@ -2,6 +2,7 @@ import sys
 sys.path.append(".")
 
 from core.table_names import *
+from classes.detailed_course import courseNameIndex
 
 weekdays = ['一', '二', '三', '四', '五', '六', '日']
 weekdaysDict = {'一': 'MON', '二': 'TUE', '三': 'WED', '四': 'THU', '五': 'FRI', '六': 'SAT', '日': 'SUN'}
@@ -30,7 +31,7 @@ def extractCourseName(timetable):
             course = day[time]
             if (course == ""):
                 continue
-            # day[time] = course[2]       # Course name
-            d[weekday][time] = course[2]
+            # day[time] = course[courseNameIndex]       # Course name
+            d[weekday][time] = course[courseNameIndex]
 
     return d
