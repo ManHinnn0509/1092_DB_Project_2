@@ -79,7 +79,6 @@ def initTimetable(student):
 
         for c in complus:
             c = list(c)
-            log(str(c))
             course = DetailedCourse(c)
 
             if not (course.isCompuls()):

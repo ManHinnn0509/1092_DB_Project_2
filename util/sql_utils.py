@@ -50,7 +50,10 @@ def searchCourse(cid):
     q = 'SELECT * FROM {} WHERE cid = "{}"'.format(courseTableName, cid)
     return execQuery(q)
 
-def getCoursesDetailed(className = None, cid = None):
+def searchCourseDetailed(cid):
+    return getCoursesDetailed("", cid)
+
+def getCoursesDetailed(className, cid):
     q = """
     SELECT c.cid, c.class, c.name, c.credit, c.is_compuls, c.dept, c.taken, c.max_taken, c.t_name, 
     ct.weekday, ct.session 
@@ -58,10 +61,10 @@ def getCoursesDetailed(className = None, cid = None):
     WHERE c.cid = ct.cid
     """.format(courseTableName, courseTimeTableName)
 
-    if (className != None):
+    if ((className != "")):
         q = q + " " + 'AND c.class = "{}"'.format(className)
     
-    if (cid != None):
+    if ((cid != "")):
         q = q + " " + 'AND c.cid = "{}"'.format(cid)
     
     q = q + ";"

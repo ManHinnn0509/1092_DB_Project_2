@@ -3,7 +3,7 @@ import base64
 
 # Print messages in console...
 def log(s):
-    print(s, file=sys.stdout)
+    print(str(s), file=sys.stdout)
 
 def alertBox(text):
     return '<script type="text/javascript">alert("{}");</script>'.format(text)

@@ -5,6 +5,7 @@ sys.path.append(".")
 from util.sql_utils import *
 from util.time_utils import timeList
 from core.config import maxCredit, minCredit
+from classes.detailed_course import courseNameIndex
 
 class Student:
     def __init__(self, studentData):
@@ -43,7 +44,7 @@ class Student:
     def reachedMinCredit(self, credit):
         return (self.getCredit() - credit < minCredit)
     
-    def hasCourse(self, weekday, session):
+    def hasCourseSameTime(self, weekday, session):
         timetable = self.getTimetable()
 
         try:
@@ -52,6 +53,28 @@ class Student:
             timetable = eval(timetable)
         
         return timetable[weekday][timeList[session]] != ""
+    
+    def hasSameCourse(self, courseName):
+        # Timetable stores "DetailedCourse"
+        # See initTimetable() in info_page.py
+
+        d = self.getTimetable()
+        try:
+            d = dict(d)
+        except:
+            d = eval(d)
+
+        for weekday, t in d.items():
+            day = d[weekday]
+            times = list(day.keys())
+            for time in times:
+                course = day[time]
+                if (course == ""):
+                    continue
+                if (d[weekday][time][courseNameIndex] == courseName):
+                    return True
+        
+        return False
 
     def updateCreditTimetable(self, newCredit, newTimetable):
         q = 'UPDATE {} SET credit = {}, timetable = "{}" WHERE sid = "{}"'.format(studentTableName, newCredit, (newTimetable), self.getSID())

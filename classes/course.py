@@ -51,3 +51,11 @@ class Course:
             return True
         except:
             return False
+            
+    def removeStudent(self):
+        try:
+            q = 'UPDATE {} SET taken = taken - 1 WHERE cid = "{}"'.format(courseTableName, self.getCID())
+            execQuery(q)
+            return True
+        except:
+            return False
