@@ -1,4 +1,3 @@
-from classes.course import Course
 from util.time_utils import genTimetable
 import pandas as pd
 
@@ -128,7 +127,7 @@ def buildInfo(student):
     return df.to_html(index=False)
 
 def getSID():
-
+    
     # No input. Empty string
     sid = request.form.get("sid_input")
     if (sid == ""):
