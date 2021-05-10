@@ -18,6 +18,7 @@ from util.img_utils import lmPointL, lmPointR
 
 # Different pages
 from info_page import info
+from courses_page import courses
 
 @app.route('/')
 def index():

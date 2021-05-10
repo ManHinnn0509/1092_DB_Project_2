@@ -17,6 +17,7 @@ def genConnection():
 
 def execQuery(query, returnList = False):
     try:
+        # Removes the new line character since it will cause error 
         query = query.replace("\n", "")
 
         conn = genConnection()
@@ -44,7 +45,12 @@ def searchStudent(sid):
     q = 'SELECT * FROM {} WHERE sid = "{}"'.format(studentTableName, sid)
     return execQuery(q)
 
-def getCoursesDetailed(className = None):
+def searchCourse(cid):
+    # Keep it like this? Or use the getCoursesDetailed() function???
+    q = 'SELECT * FROM {} WHERE cid = "{}"'.format(courseTableName, cid)
+    return execQuery(q)
+
+def getCoursesDetailed(className = None, cid = None):
     q = """
     SELECT c.cid, c.class, c.name, c.credit, c.is_compuls, c.dept, c.taken, c.max_taken, c.t_name, 
     ct.weekday, ct.session 
@@ -52,9 +58,21 @@ def getCoursesDetailed(className = None):
     WHERE c.cid = ct.cid
     """.format(courseTableName, courseTimeTableName)
 
-    if (className == None):
-        q = q + ";"
-    else:
-        q = q + " " + 'AND c.class = "{}"'.format(className) + ";"
+    if (className != None):
+        q = q + " " + 'AND c.class = "{}"'.format(className)
     
+    if (cid != None):
+        q = q + " " + 'AND c.cid = "{}"'.format(cid)
+    
+    q = q + ";"
+
+    """
+    For testing (Copy)
+    
+    SELECT c.cid, c.class, c.name, c.credit, c.is_compuls, c.dept, c.taken, c.max_taken, c.t_name, 
+    ct.weekday, ct.session 
+    FROM course AS c, course_time AS ct 
+    WHERE c.cid = ct.cid
+    """
+
     return execQuery(q)

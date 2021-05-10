@@ -86,9 +86,11 @@ def initTimetable(student):
                 continue
 
             # Remove this?
+            """
             if (course.isFulled()):
                 continue
-            
+            """
+
             credit = course.getCredit()
 
             weekday = course.getWeekday()
@@ -103,7 +105,6 @@ def initTimetable(student):
         return True
 
     except Exception as e:
-
         log(e)
         return False
 
