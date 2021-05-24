@@ -45,6 +45,8 @@ def info():
     s = Student(student[0])
     t = s.getTimetable()
     if ((t == None) or (t == "")):
+        # s.updateCreditTimetable(0, genTimetable())
+        
         r = initTimetable(s)
         log(str(r))
         # "Refresh" after initializing timetable
@@ -75,7 +77,8 @@ def initTimetable(student):
         sCredit = student.getCredit()
 
         dyc = student.getDeptYearClass()
-        complus = getCoursesDetailed(dyc)
+        complus = getCoursesDetailed(dyc, "")
+        print(complus)
 
         for c in complus:
             c = list(c)
@@ -95,7 +98,12 @@ def initTimetable(student):
             weekday = course.getWeekday()
             session = course.getSession()
 
-            timetable[weekday][timeList[session]] = c
+            l = len(weekday)
+            for x in range (0, l):
+                w = weekday[x]
+                s = session[x]
+                timetable[w][timeList[s]] = c
+
             sCredit += credit
 
             course.addStudent()

@@ -26,13 +26,18 @@ def add_course():
     
     cid = request.form.get("cid_input")
     c = searchCourseDetailed(cid)
+    print(c)
     
     # Invalid Course ID
     if (len(c) == 0):
         html += "<p>Invalid course id!</p>"
         return html
     
-    c = list(c[0])
+    c = c[0]
+    print(c)
+    c = list(c)
+    print(c)
+    
     course = DetailedCourse(c)
     if (course.isFulled()):
         html += "<p>You cannot add this course! (Reason: Course is fulled)</p>"
@@ -44,7 +49,7 @@ def add_course():
         html += "<p>You cannot add this course! (Reason: Maximum credit reached)</p>"
         return html
     
-    inCourse, l = student.hasCourse(cid)
+    inCourse, l = student.inThisCourse(cid)
     if (inCourse):
         html += "<p>You're in this course already!</p>"
         return html
@@ -62,7 +67,12 @@ def add_course():
     
     timetable = eval(student.getTimetable())
 
-    timetable[weekday][timeList[session]] = (c)
+    l = len(weekday)
+    for x in range (0, l):
+        w = weekday[x]
+        s = session[x]
+        timetable[w][timeList[s]] = (c)
+    
     newCredit = student.getCredit() + courseCredit
 
     student.updateCreditTimetable(newCredit, timetable)

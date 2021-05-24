@@ -37,7 +37,7 @@ def drop_course():
         return html
     
     student = Student(searchStudent(sid)[0])
-    hasCourse, l = student.hasCourse(cid)
+    hasCourse, l = student.inThisCourse(cid)
     if not (hasCourse):
         html += "<p>You don't have this course in your timetable!</p>"
         return html
@@ -58,7 +58,12 @@ def drop_course():
     timetable = eval(student.getTimetable())
 
     # Removes the course from the student's timetable and also the amount of credit of the target course
-    timetable[weekday][time] = ""
+    l = len(weekday)
+    for x in range(0, l):
+        w = weekday[x]
+        t = time[x]
+        timetable[w][t] = ""
+    
     newCredit = sCredit - cCredit
 
     if (course.isCompuls()):

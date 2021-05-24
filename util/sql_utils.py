@@ -1,3 +1,4 @@
+import re
 import MySQLdb
 
 import sys
@@ -77,5 +78,75 @@ def getCoursesDetailed(className, cid):
     FROM course AS c, course_time AS ct 
     WHERE c.cid = ct.cid
     """
+    result = execQuery(q)
+    # print(result)
+    
+    if (cid == "" and className == ""):
+        return result
+    if (cid != ""):
+        formattedCourseData = list(result[0])
+        formattedCourseData[9] = []
+        formattedCourseData[10] = []
 
-    return execQuery(q)
+        for data in result:
+            formattedCourseData[9].append(data[9])
+            formattedCourseData[10].append(data[10])
+        
+        # print(formattedCourseData)
+        return [formattedCourseData]
+    
+    if (len(result) == 0):
+        return result
+    elif (len(result) == 1):
+        return result
+    
+    result = list(result)
+    for x in range (len(result)):
+        result[x] = list(result[x])
+
+    d = {}
+    for ele in result:
+        cid = str(ele[0])
+        w = ele[9]
+        s = ele[10]
+
+        if (cid not in d):
+            d[cid] = []
+        else:
+            d[cid] += [[w, s]]
+    
+    l = []
+    for ele in result:
+        if (l == []):
+            ele[9] = []
+            ele[10] = []
+            l.append(ele)
+            continue
+        
+        cid = str(ele[0])
+
+        inL = False
+        for e in l:
+            if (cid == e[0]):
+                inL = True
+                break
+        
+        if (inL == False):
+            ele[9] = []
+            ele[10] = []
+            l.append(ele)
+
+    for ele in l:
+        cid = ele[0]
+        # print(ele)
+
+        data = d[cid]
+        for x in range (len(data)):
+            dataSet = data[x]
+            print(dataSet)
+
+            ele[9].append(dataSet[0])
+            ele[10].append(dataSet[1])
+
+    # print(l)
+    return l

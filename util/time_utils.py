@@ -21,7 +21,12 @@ def genTimetable():
 
 def extractCourseName(timetable):
     if (isinstance(timetable, str)):
-        timetable = eval(timetable)
+        try:
+            timetable = eval(timetable)
+        except:
+            print("Unable to extract course name from timetable...")
+            # timetable = genTimetable()
+            return genTimetable()
 
     d = timetable
     for weekday, t in d.items():

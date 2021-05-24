@@ -45,12 +45,15 @@ class Student:
         return (self.getCredit() - credit < minCredit)
     
     # I think I should rename this...?
-    def hasCourse(self, courseID):
+    def inThisCourse(self, courseID):
 
         # Lazy way ~
         # return (str(courseID) in str(self.getTimetable()))
 
         d = eval(self.getTimetable())
+        inCourse = False
+        wl = []
+        tl = []
 
         for weekday, t in d.items():
             day = d[weekday]
@@ -60,13 +63,33 @@ class Student:
                 if (course == ""):
                     continue
                 if (d[weekday][time][cidIndex] == courseID):
-                    return True, [weekday, time]
-        
-        return False, None
+                    # return True, [weekday, time]
+                    inCourse = True
+                    wl.append(weekday)
+                    tl.append(time)
+        if (inCourse == False):
+            return False, None
+        else:
+            return True, [wl, tl]
     
     def hasCourseSameTime(self, weekday, session):
         timetable = eval(self.getTimetable())
-        return timetable[weekday][timeList[session]] != ""
+        print(type(session))
+        print(session)
+
+        # Length of weekday and session should be the same
+        l = len(weekday)
+        
+        for x in range (0, l):
+            w = weekday[x]
+            s = session[x]
+            
+            c = timetable[w][timeList[s]]
+            if (c != ""):
+                return True
+        return False
+
+        # return timetable[weekday][timeList[session]] != ""
     
     def hasSameCourse(self, courseName):
         # Timetable stores "DetailedCourse"
